@@ -65,7 +65,7 @@ class Login extends Component {
           password
         }
       })
-      const { id, token } = result.data.authenticateUserMutation
+      const { id, token } = result.data.authenticateUser
       this._saveUserData(id, token)
     } else {
       const result = await this.props.signupUserMutation({
@@ -78,7 +78,7 @@ class Login extends Component {
       const { id, token } = result.data.signupUserMutation
       this._saveUserData(id, token)
     }
-    this.props.history.push('/')
+    this.props.history.push(`/`)
   }
 
   _saveUserData = (id, token) => {
@@ -91,7 +91,8 @@ const SIGNUP_USER_MUTATION = gql`
   mutation SignupUserMutation($email: String!, $password: String!, $name: String!) {
     signupUser(
       email: $email,
-      password: $password
+      password: $password,
+      name: $name
     ) {
       id
       token
@@ -101,14 +102,9 @@ const SIGNUP_USER_MUTATION = gql`
 
 const AUTHENTICATE_USER_MUTATION = gql`
   mutation AuthenticateUserMutation($email: String!, $password: String!) {
-    authenticateUser(email: {
-      email: $email,
-      password: $password
-    }) {
+    authenticateUser(email: $email, password: $password) {
       token
-      user {
-        id
-      }
+      id
     }
   }
 `
